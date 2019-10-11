@@ -35,3 +35,6 @@ $(document).ready(function() {
 
   paper.view.draw();
 });
+
+const dia =
+  'he said "don\'t do that" but mark could not hear what he was saying.';
