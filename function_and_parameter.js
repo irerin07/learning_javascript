@@ -36,7 +36,7 @@ console.log(`g를 호출한 다음: o.message = "${o.message}"`);
 function h(p) {
   p.message = "h에서 수정함";
   p = {
-    message: "새로운 객체"
+    message: "새로운 객체 할당"
   };
   console.log(`h 내부: p.message="${p.message}" (할당후)`); ////2. h 내부: p.message="새로운 객체" (할당후)
 }
