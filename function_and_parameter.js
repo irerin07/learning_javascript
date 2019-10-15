@@ -215,3 +215,133 @@ const o6 = {
   }
 };
 console.log(o6.greetBackWards());
+
+// const g1 = function f1(stop) {
+//   //함수 표현식을 사용해 그 결과를 변수에 할당한다.
+//   if (stop) console.log("f1 stopped");
+//   f1(true);
+// };
+// g1(false);
+/*
+함수 안에서 자신을 호출할 떄(재귀호출) 이런 방식이 필요할 수 있다.
+함수 안에서는 f를 써서 자기 자신을 참조하고, 함수 바깥에서는 g를 써서 함수를 호출한다.
+함수 선언이 표현식으로 사용되었다면 그건 함수 표현식이다.
+*/
+
+// const a = function() {
+//   return "hello";
+// };
+// const a = () => "hello";
+
+// const a2 = function(name) {
+//   return `Hello, ${name}`;
+// };
+// const a2 = name => `Hello, ${name}!`;
+
+// const a3 = function(a, b) {
+//   return a + b;
+// };
+// const a3 = (a, b) => a + b;
+/*
+화살표 표기법은 function이라는 단어와 중괄호 숫자를 줄이려고 고안된 단축 문법.
+1. function 생략 가능
+2. 함수에 매개변수가 단 하나 뿐이라면 괄호 역시 생략 가능
+3. 함수 바디가 표현식 하나라면 중괄호와 return문 역시 생략 가능
+
+화살표 함수는 익명 함수를 만들어 다른 곳에 전달하려 할 떄 가장 유용하다.
+
+화살표 함수에서는 this가 다른 변수와 마찬가지로 정적으로 묶인다.
+화살표 함수를 사용하면 내부 함수 안에서 this를 사용할 수 있다.
+*/
+const o7 = {
+  name: "Julie",
+  greetBackWards: function() {
+    const getReverseName = () => {
+      let nameBackWards = "";
+      for (let i = this.name.length - 1; i >= 0; i--) {
+        nameBackWards += this.name[i];
+      }
+      return nameBackWards;
+    };
+    return `${getReverseName()} si eman ym ,olleH`;
+  }
+};
+console.log(o7.greetBackWards());
+
+/*
+화살표 함수는 객체 생성자로 사용할 수 없다.
+*/
+
+const bruce = { name: "Bruce" };
+const madeline = { name: "Madeline" };
+
+// 이 함수는 어떤 객체에도 연결되지 않았지만 this를 사용한다.
+function greet() {
+  return `Hello, I am ${this.name}`;
+}
+
+console.log();
+console.log(greet());
+console.log(greet.call(bruce));
+console.log(greet.call(madeline));
+
+/*
+함수를 어디서, 어떻게 호출 했느냐와 관계없이 this가 무엇인지 지정할 수 있다.
+call 메서드는 모든 함수에서 사용할 수 있고, this를 특정 값으로 지정할 수 있다.
+*/
+
+function update(birthYear, occupation) {
+  this.birthYear = birthYear;
+  this.occupation = occupation;
+}
+update.call(bruce, 1949, "singer");
+//bruce는 이제 {name: "Bruce", birthYear: 1949, occupation: "singer"}입니다.
+update.call(madeline, 1942, "actress");
+//madeline 이제 {name: "Madeline", birthYear: 1942, occupation: "actress"}입니다.
+
+/*
+함수를 호출하면서 call을 사용하고 this로 사용할 객체를 넘기면 해당 함수가 주어진 객체의 메서드인 것 처럼 사용할 수 있다.
+
+call의 첫 번쨰 매개변수는 this로 사용할 값이고, 매개 변수가 더 있으면 그 매개변수는 호출하는 함수로 전달됩니다.
+*/
+
+update.apply(bruce, [1955, "actor"]);
+//bruce는 이제 {name: "Bruce", birthYear: 1955, occupation: "actor"}입니다.
+update.apply(madeline, [1918, "writer"]);
+//madeline 이제 {name: "Madeline", birthYear: 1918, occupation: "writer"}입니다.
+
+/*
+apply는 함수 매개변수를 처리하는 방법을 제외하면 call과 완전히 같다.
+apply는 매개변수를 '배열'로 받는다.
+*/
+
+const arr2 = [2, 3, -5, 15, 7];
+Math.min.apply(null, arr);
+Math.max.apply(null, arr);
+/*
+apply는 배열 요소를 함수 매개변수로 사용해야 할 떄 유용하다.
+*/
+
+const newBruce = [1940, "martial artist"];
+update.call(bruce, ...newBruce); //apply(bruce, newBruce)와 같다.
+Math.min(...arr);
+Math.max(...arr);
+
+const updateBruce = update.bind(bruce);
+updateBruce(1904, "actor");
+//bruce는 이제 {name: "Bruce", birthYear: 1904, occupation: "actor"}입니다.
+updateBruce.call(madeline, 1274, "king");
+//bruce는 이제 {name: "Bruce", birthYear: 1274, occupation: "king"}입니다.
+//madeline은 변하지 않는다.
+
+/*
+bind를 사용하면 함수의 this값을 영구히 바꿀 수 있다.
+update 메소드를 이리저리 호출할 때 this값은 항상 bruce가 되도록 고정된다.
+이후 call, apply 혹은 다른 bind와 함께 호출하더라도 this값은 언제나 bruce가 된다.
+*/
+
+const updateBruce1949 = update.bind(bruce, 1949);
+updateBruce1949("singer, songwriter");
+/*
+bruce가 태어난 해를 항상 1949로 고정하고 직업은 자유롭게 바꾸고 싶을떄 위와 같이 사용하면 된다.
+*/
