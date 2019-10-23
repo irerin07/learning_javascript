@@ -300,3 +300,63 @@ Object.keys를 사용하면 프로토타입 체인에 정의된 프로퍼티를 
 */
 console.log(car8.toString());
 console.log(car9.toString());
+
+/*
+다중상속, 믹스인, 인터페이스
+클래스가 부모 클래스 두개를 가지는 기능
+자바스크립트가 다중 상속이 필요한 문제에 대한 해답으로 내놓은 개념이 믹스인(Mixin)
+믹스인 -> 기능을 필요한 만큼 섞어 놓은 것
+*/
+// class InsurancePolicy {}
+// function makeInsurable(o) {
+//   o.addInsurancePolicy = function(p) {
+//     this.InsurancePolicy = p;
+//   };
+//   o.getInsurancePolicy = function() {
+//     return this.insurancePolicy;
+//   };
+//   o.isInsured = function() {
+//     return !!this.insurancePolicy;
+//   };
+// }
+
+// const car11 = new Car4();
+// makeInsurable(car11);
+// car11.addInsurancePolicy(new InsurancePolicy());
+// /*
+// 위의 방법은 모든 자동차에서 makeInsurable을 호출해야한다.
+// Car4의 생성자에 추가할 수도 있지만 그렇게 하면 이 기능을 모든 자동차에 복사하는 꼴이 된다.
+// */
+// makeInsurable(Car.prototype);
+// const car12 = new Car4();
+// car12.addInsurancePolicy(new InsurancePolicy());
+/*
+이제 보험 관련 메서드들은 모두 Car클래스에 정의된 것 처럼 동작한다.
+
+보험 회사에서 매우 범용적인 메소드 이름을 사용해서 우연히 Car클래스의 메서드와 충돌할지도 모른다.
+이런 경우 Symbol로 해결할 수 있다.
+*/
+
+class InsurancePolicy {}
+const ADD_POLICY = Symbol();
+const GET_POLICY = Symbol();
+const IS_INSURED = Symbol();
+const _POLICY = Symbol();
+function makeInsurable(o) {
+  o[ADD_POLICY] = function(p) {
+    this[_POLICY] = p;
+  };
+  o[GET_POLICY] = function() {
+    return this[_POLICY];
+  };
+  o[IS_INSURED] = function() {
+    return !!this[_POLICY];
+  };
+}
+/*
+심볼은 항상 고유하므로 믹스인이 Car클래스의 기능과 충돌할 가능성은 없다.
+혹은 메서드 이름에는 일반적인 문자열을 쓰고 데이터 프로퍼티에는 _POLICY같은 심볼을 쓰는 절충안을 생각할 수도 있다.
+*/
+makeInsurable(Car.prototype);
+const car12 = new Car4();
+console.log(car12[ADD_POLICY]);
