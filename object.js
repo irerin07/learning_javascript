@@ -310,6 +310,7 @@ console.log(car9.toString());
 // class InsurancePolicy {}
 // function makeInsurable(o) {
 //   o.addInsurancePolicy = function(p) {
+//     console.log(p);
 //     this.InsurancePolicy = p;
 //   };
 //   o.getInsurancePolicy = function() {
@@ -323,13 +324,17 @@ console.log(car9.toString());
 // const car11 = new Car4();
 // makeInsurable(car11);
 // car11.addInsurancePolicy(new InsurancePolicy());
-// /*
-// 위의 방법은 모든 자동차에서 makeInsurable을 호출해야한다.
-// Car4의 생성자에 추가할 수도 있지만 그렇게 하면 이 기능을 모든 자동차에 복사하는 꼴이 된다.
-// */
-// makeInsurable(Car.prototype);
+// console.log(car11.getInsurancePolicy());
+// console.log(car11.isInsured());
+/*
+위의 방법은 모든 자동차에서 makeInsurable을 호출해야한다.
+Car4의 생성자에 추가할 수도 있지만 그렇게 하면 이 기능을 모든 자동차에 복사하는 꼴이 된다.
+*/
+// makeInsurable(Car4.prototype);
 // const car12 = new Car4();
 // car12.addInsurancePolicy(new InsurancePolicy());
+// console.log(car12.getInsurancePolicy());
+// console.log(car12.isInsured());
 /*
 이제 보험 관련 메서드들은 모두 Car클래스에 정의된 것 처럼 동작한다.
 
@@ -344,6 +349,7 @@ const IS_INSURED = Symbol();
 const _POLICY = Symbol();
 function makeInsurable(o) {
   o[ADD_POLICY] = function(p) {
+    console.log("p: " + p);
     this[_POLICY] = p;
   };
   o[GET_POLICY] = function() {
@@ -359,4 +365,4 @@ function makeInsurable(o) {
 */
 makeInsurable(Car.prototype);
 const car12 = new Car4();
-console.log(car12[ADD_POLICY]);
+car12[ADD_POLICY];
