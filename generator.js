@@ -73,6 +73,7 @@ console.log(it3.next());
 다음과 같은 코드에서는 c는 출력되지 않는다.
 제너레이터에서 중요한 값을 return으로 반환하려 하지 말아야하고 return은 중간에 종료하는 목적으로만 사용하도록 하자
 */
+
 for (let i of abc()) {
   console.log(i);
 }
